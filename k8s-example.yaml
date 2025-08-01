@@ -36,7 +36,6 @@ spec:
         args:
         - "$(TARGET_IP)"
         - "$(TARGET_PORT)"
-        - "/app/.ssh/id_rsa"
         env:
         - name: TARGET_IP
           valueFrom:
@@ -71,7 +70,6 @@ spec:
         args:
         - "147.185.41.233"
         - "20046"
-        - "/app/.ssh/id_rsa"
         volumeMounts:
         - name: ssh-key
           mountPath: /app/.ssh
