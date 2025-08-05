@@ -4,9 +4,10 @@ set -euo pipefail
 # Read index from environment variable, default to 0
 INDEX="${JOB_COMPLETION_INDEX:-0}"
 
-# Extract IP and PORT from mounted files using sed (convert 0-based to 1-based for sed)
-IP=$(sed -n "$((INDEX + 1))p" /config/ip-list.txt)
-PORT=$(sed -n "$((INDEX + 1))p" /config/port-list.txt)
+# Extract IP and PORT from single file using sed (convert 0-based to 1-based for sed)
+LINE=$(sed -n "$((INDEX + 1))p" /config/targets.txt)
+IP=$(echo "$LINE" | awk '{print $1}')
+PORT=$(echo "$LINE" | awk '{print $2}')
 
 # Validate extracted values
 if [[ -z "$IP" ]] || [[ -z "$PORT" ]]; then
@@ -34,4 +35,4 @@ cp "$SSH_KEY" /tmp/ssh_key
 chmod 600 /tmp/ssh_key
 
 # Execute dingo with extracted IP and PORT
-exec /app/dingo -ip "$IP" -port "$PORT" -user user -footprint -key /tmp/ssh_key "$@" 
+exec /app/dingo -ip "$IP" -port "$PORT" -user user -footprint -key /tmp/ssh_key "$@"
